@@ -1,0 +1,54 @@
+html {
+  box-sizing: border-box;
+}
+
+*, *:before, *:after {
+box-sizing: inherit;
+}
+
+body {
+  display: flex;
+  justify-content: center;
+}
+
+#calc-body {
+  display: flex;
+  flex-direction: column;
+  padding: 25px;
+  background-color: bisque;
+}
+
+#calc-screen {
+  display: flex;
+  background-color: white;
+  margin-bottom: 25px;
+  padding: 10px;
+  width: 100%;
+  height: auto;
+}
+
+#calc-screen p {
+  margin: 0;
+  font-size: 42px;
+  text-align: right;
+  width: inherit;
+}
+
+.button-row {
+  display: flex;
+  margin: 5px;
+  gap: 10px;
+}
+
+button {
+  flex: auto;
+  width: 50px;
+  height: 50px;
+}
+
+#calc-screen input {
+  font-size: 36px;
+  flex: auto;
+  height: auto;
+  width:auto;
+}
