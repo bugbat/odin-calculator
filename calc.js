@@ -22,22 +22,6 @@ function multiply(a, b) {
   return a * b;
 }
 
-// display
-const display = document.querySelector("#calc-screen p")
-
-function updateDisplay(input) {
-  display.textContent = input;
-}
-
-function clearDisplay() {
-  result = null;
-  firstOperand = null;
-  secondOperand = null;
-  operator = null;
-  
-  display.textContent = "0";
-}
-
 function doMath(a, b, op) {
   switch(op) {
     case "divide":
@@ -58,6 +42,27 @@ function doMath(a, b, op) {
   firstOperand = null;
   secondOperand = null;
   operator = null;
+}
+
+// display
+const display = document.querySelector("#calc-screen p")
+
+function updateDisplay(input) {
+  display.textContent = input;
+}
+
+function clearDisplay() {
+  result = null;
+  firstOperand = null;
+  secondOperand = null;
+  operator = null;
+  
+  display.textContent = "0";
+}
+
+function tooLong(string) {
+  if (!string) return false;
+  else if (string.length > 9) return true;
 }
 
 // buttons
@@ -88,16 +93,16 @@ function buttonSelect(button) {
   }
   else if (type === "operand") {
     if (!secondOperand && !operator){
-      if (!firstOperand) firstOperand = value;
+      if (tooLong(firstOperand)) return;
+      else if (!firstOperand || firstOperand === "0") firstOperand = value;
       else{
         firstOperand += value;
       }
       updateDisplay(firstOperand);
     }
     else if (operator){
-      if (!secondOperand) {
-        secondOperand = value;
-      }
+      if (tooLong(secondOperand)) return;
+      if (!secondOperand || secondOperand === "0") secondOperand = value;
       else{
         secondOperand += value;
       }
