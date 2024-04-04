@@ -1,6 +1,12 @@
+// variables
+let firstOperand = null;
+let secondOperand = null;
+let operator = null;
+let result = null;
+
 // math functions
 function add(a, b) {
-  return a + b;
+  return +a + +b;
 }
 
 function subtract(a, b) {
@@ -8,7 +14,7 @@ function subtract(a, b) {
 }
 
 function divide(a, b) {
-  if (b === 0) return "ERROR";
+  if (b === 0 || b === "0") return "ERROR";
   return a / b;
 }
 
@@ -20,37 +26,91 @@ function multiply(a, b) {
 const display = document.querySelector("#calc-screen p")
 
 function updateDisplay(input) {
-  if (display.textContent === "0") {
-    display.textContent = input;
-  }
-  else {
-    display.textContent += input;
-  }
+  display.textContent = input;
 }
 
 function clearDisplay() {
+  result = null;
+  firstOperand = null;
+  secondOperand = null;
+  operator = null;
+  
   display.textContent = "0";
+}
+
+function doMath(a, b, op) {
+  switch(op) {
+    case "divide":
+      result = divide(a, b);
+      break;
+    case "multiply":
+      result = multiply(a, b);
+      break;
+    case "add":
+      result = add(a, b);
+      break;
+    case "subtract":
+      result = subtract(a, b);
+      break;
+  }
+  updateDisplay(result);
+  // resets values to allow calculation based on result
+  firstOperand = null;
+  secondOperand = null;
+  operator = null;
 }
 
 // buttons
 const buttons = document.querySelectorAll("button");
 
+buttons.forEach (button => {
+  button.addEventListener("click", function() {
+    buttonSelect(button);
+  });
+});
+
 function buttonSelect(button) {
   const type = button.className;
   const value = button.value;
+  //for dev
   console.log("Value " + button.value + ", Class " + button.className);
 
   if (value === "clear") {
     clearDisplay();
   }
-
-  if (type === "operand") {
-    updateDisplay(button.value);
+  else if (value === "equals") {
+    if (firstOperand && secondOperand && operator){
+      doMath(firstOperand, secondOperand, operator);
+    }
+    else if (result && secondOperand && operator){
+      doMath(result, secondOperand, operator);
+    }
+  }
+  else if (type === "operand") {
+    if (!secondOperand && !operator){
+      if (!firstOperand) firstOperand = value;
+      else{
+        firstOperand += value;
+      }
+      updateDisplay(firstOperand);
+    }
+    else if (operator){
+      if (!secondOperand) {
+        secondOperand = value;
+      }
+      else{
+        secondOperand += value;
+      }
+      updateDisplay(secondOperand);
+    }
+  }
+  else if (type === "operator") {
+    operator = value;
+    if (firstOperand && secondOperand) {
+      doMath(firstOperand, secondOperand, operator);
+    }
+    if (result && secondOperand) {
+      doMath(result, secondOperand, operator);
+    }
   }
 }
-
-buttons.forEach (button => {
-  button.addEventListener("click", function() {
-    buttonSelect(button)
-  });
-});

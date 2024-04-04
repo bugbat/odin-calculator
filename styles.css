@@ -16,6 +16,7 @@ body {
   flex-direction: column;
   padding: 25px;
   background-color: bisque;
+  border: 5px solid rgb(167, 134, 94);
 }
 
 #calc-screen {
@@ -25,6 +26,7 @@ body {
   padding: 10px;
   width: 100%;
   height: auto;
+  border: 5px solid rgb(167, 134, 94);
 }
 
 #calc-screen p {
@@ -41,9 +43,18 @@ body {
 }
 
 button {
+  font-weight: bold;
+  font-size: 18px;
   flex: auto;
   width: 50px;
   height: 50px;
+  border-radius: 5px;
+  border: 3px solid gray;
+  background: whitesmoke;
+}
+
+button:hover {
+  background-color: lightgray;
 }
 
 #calc-screen input {
