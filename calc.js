@@ -56,13 +56,42 @@ function clearDisplay() {
   firstOperand = null;
   secondOperand = null;
   operator = null;
-  
   display.textContent = "0";
+}
+
+function deleteNum() {
+  if (!secondOperand && !operator) {
+    if (!firstOperand || firstOperand.length <= 1) {
+      firstOperand = "0";
+    }
+    else {
+      firstOperand = firstOperand.substring(0, firstOperand.length - 1);
+    }
+    updateDisplay(firstOperand);
+  }
+  else if (firstOperand && operator) {
+    if (!secondOperand || secondOperand.length <= 1) {
+      secondOperand = "0";
+    }
+    else {
+      secondOperand = secondOperand.substring(0, secondOperand.length - 1);
+    }
+    updateDisplay(secondOperand);
+  }
 }
 
 function tooLong(string) {
   if (!string) return false;
   else if (string.length > 9) return true;
+}
+
+function hasDecimal(string) {
+  if (!string) return false;
+  const stringArr = string.split("");
+  if (stringArr.includes(".")) {
+    return true;
+  }
+  return false;
 }
 
 // buttons
@@ -75,13 +104,34 @@ buttons.forEach (button => {
 });
 
 function buttonSelect(button) {
-  const type = button.className;
+  const type = button.className.split(" ");
   const value = button.value;
-  //for dev
-  console.log("Value " + button.value + ", Class " + button.className);
 
   if (value === "clear") {
     clearDisplay();
+  }
+  else if (value === "backspace") {
+    deleteNum();
+  }
+  else if (value === "decimal") {
+    // send input to firstOperand
+    if (!secondOperand && !operator){
+      if (tooLong(firstOperand) || hasDecimal(firstOperand)) return;
+      else if (!firstOperand || firstOperand === "0") firstOperand = "0.";
+      else{
+        firstOperand += ".";
+      }
+      updateDisplay(firstOperand);
+    }
+    // send input to secondOperand
+    else if (operator){
+      if (tooLong(secondOperand) || hasDecimal(secondOperand)) return;
+      if (!secondOperand || secondOperand === "0") secondOperand = "0.";
+      else{
+        secondOperand += ".";
+      }
+      updateDisplay(secondOperand);
+    }
   }
   else if (value === "equals") {
     if (firstOperand && secondOperand && operator){
@@ -91,7 +141,8 @@ function buttonSelect(button) {
       doMath(result, secondOperand, operator);
     }
   }
-  else if (type === "operand") {
+  else if (type.includes("operand")) {
+    // send input to firstOperand
     if (!secondOperand && !operator){
       if (tooLong(firstOperand)) return;
       else if (!firstOperand || firstOperand === "0") firstOperand = value;
@@ -100,6 +151,7 @@ function buttonSelect(button) {
       }
       updateDisplay(firstOperand);
     }
+    // send input to secondOperand
     else if (operator){
       if (tooLong(secondOperand)) return;
       if (!secondOperand || secondOperand === "0") secondOperand = value;
@@ -109,7 +161,7 @@ function buttonSelect(button) {
       updateDisplay(secondOperand);
     }
   }
-  else if (type === "operator") {
+  else if (type.includes("operator")) {
     operator = value;
     if (firstOperand && secondOperand) {
       doMath(firstOperand, secondOperand, operator);
